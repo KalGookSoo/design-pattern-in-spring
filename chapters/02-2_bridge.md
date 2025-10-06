@@ -51,24 +51,40 @@ public interface MessageSender {
 }
 
 public final class EmailSender implements MessageSender {
-    @Override public void send(String channel, String content) { /* SMTP ... */ }
+    @Override
+    public void send(String channel, String content) {
+        /* SMTP ... */
+    }
 }
 
 public final class SmsSender implements MessageSender {
-    @Override public void send(String channel, String content) { /* SMS API ... */ }
+    @Override
+    public void send(String channel, String content) {
+        /* SMS API ... */
+    }
 }
 
 // Abstraction: 알림 도메인의 고수준 정책
 public class Notification {
     protected final MessageSender sender; // Bridge
-    public Notification(MessageSender sender) { this.sender = sender; }
-    public void notify(String to, String message) { sender.send(to, message); }
+
+    public Notification(MessageSender sender) {
+        this.sender = sender;
+    }
+
+    public void notify(String to, String message) {
+        sender.send(to, message);
+    }
 }
 
 // RefinedAbstraction: 정책을 확장
 public final class UrgentNotification extends Notification {
-    public UrgentNotification(MessageSender sender) { super(sender); }
-    @Override public void notify(String to, String message) {
+    public UrgentNotification(MessageSender sender) {
+        super(sender);
+    }
+
+    @Override
+    public void notify(String to, String message) {
         super.notify(to, "[URGENT] " + message);
     }
 }

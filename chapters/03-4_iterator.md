@@ -47,16 +47,35 @@ classDiagram
 ### 간단 예시 (Java 최소 코드)
 
 ```java
+import java.util.Iterator;
+
 // 사용자 정의 집합체와 반복자
 public final class IntArray implements Iterable<Integer> { // Iterable 제공 시 for-each 가능
     private final int[] values;
-    public IntArray(int... values) { this.values = values; }
-    @Override public java.util.Iterator<Integer> iterator() {
-        return new java.util.Iterator<Integer>() {
+
+    public IntArray(int... values) {
+        this.values = values;
+    }
+
+    @Override
+    public Iterator<Integer> iterator() {
+        return new Iterator<Integer>() {
             private int index = 0;
-            @Override public boolean hasNext() { return index < values.length; }
-            @Override public Integer next() { return Integer.valueOf(values[index++]); }
-            @Override public void remove() { throw new UnsupportedOperationException(); }
+
+            @Override
+            public boolean hasNext() {
+                return index < values.length;
+            }
+
+            @Override
+            public Integer next() {
+                return Integer.valueOf(values[index++]);
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
         };
     }
 }
@@ -120,7 +139,6 @@ flowchart LR
     D --> B
 ```
 
-- HasNext\? 노드의 물음표는 ASCII로 이스케이프했습니다.
 - 배치 가져오기와 처리 사이에 트랜잭션 경계를 신중히 설정하세요.
 
 

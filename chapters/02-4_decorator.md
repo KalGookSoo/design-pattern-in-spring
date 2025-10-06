@@ -45,6 +45,9 @@ classDiagram
 ### 간단 예시 (Java 최소 코드)
 
 ```java
+import java.util.HashMap;
+import java.util.Map;
+
 // Component: 가격 계산 서비스 계약
 public interface PricingService {
     int price(String sku, int qty);
@@ -61,12 +64,18 @@ public final class BasicPricingService implements PricingService {
 // Decorator: 공통 래퍼
 public abstract class PricingServiceDecorator implements PricingService {
     protected final PricingService delegate;
-    protected PricingServiceDecorator(PricingService delegate) { this.delegate = delegate; }
+
+    protected PricingServiceDecorator(PricingService delegate) {
+        this.delegate = delegate;
+    }
 }
 
 // ConcreteDecorator: 로깅 추가
 public final class LoggingPricingService extends PricingServiceDecorator {
-    public LoggingPricingService(PricingService delegate) { super(delegate); }
+    public LoggingPricingService(PricingService delegate) {
+        super(delegate);
+    }
+
     @Override
     public int price(String sku, int qty) {
         System.out.println("pricing start: " + sku);
@@ -77,15 +86,20 @@ public final class LoggingPricingService extends PricingServiceDecorator {
 }
 
 // ConcreteDecorator: 단순 캐싱 추가 (데모용)
-import java.util.*;
 public final class CachingPricingService extends PricingServiceDecorator {
     private final Map<String, Integer> cache = new HashMap<>();
-    public CachingPricingService(PricingService delegate) { super(delegate); }
+
+    public CachingPricingService(PricingService delegate) {
+        super(delegate);
+    }
+
     @Override
     public int price(String sku, int qty) {
         String key = sku + ":" + qty;
         Integer cached = cache.get(key);
-        if (cached != null) return cached;
+        if (cached != null) {
+            return cached;
+        }
         int result = delegate.price(sku, qty);
         cache.put(key, result);
         return result;

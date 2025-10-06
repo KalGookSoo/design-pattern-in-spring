@@ -40,10 +40,14 @@ classDiagram
 ### 간단 예시 (Java 최소 코드)
 
 ```java
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 // 계약
-interface Observer { void update(Subject s); }
+interface Observer {
+    void update(Subject s);
+}
+
 interface Subject {
     void attach(Observer o);
     void detach(Observer o);
@@ -54,16 +58,38 @@ interface Subject {
 final class NewsPublisher implements Subject {
     private final List<Observer> observers = new ArrayList<>();
     private String latest;
-    public void publish(String news) { this.latest = news; notifyObservers(); }
-    public String getLatest() { return latest; }
-    @Override public void attach(Observer o) { observers.add(o); }
-    @Override public void detach(Observer o) { observers.remove(o); }
-    @Override public void notifyObservers() { for (Observer o : observers) o.update(this); }
+
+    public void publish(String news) {
+        this.latest = news;
+        notifyObservers();
+    }
+
+    public String getLatest() {
+        return latest;
+    }
+
+    @Override
+    public void attach(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void detach(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : observers) {
+            o.update(this);
+        }
+    }
 }
 
 // 옵저버
 final class SmsSubscriber implements Observer {
-    @Override public void update(Subject s) {
+    @Override
+    public void update(Subject s) {
         String msg = ((NewsPublisher) s).getLatest();
         System.out.println("[SMS] " + msg);
     }

@@ -40,21 +40,30 @@ classDiagram
 ### 간단 예시 (Java 최소 코드)
 
 ```java
+import java.util.HashMap;
+import java.util.Map;
+
 // Intrinsic state: 아이콘의 픽셀 데이터, 불변
 public final class Icon {
     private final byte[] pixels; // 불변으로 간주
     private final int width;
     private final int height;
+
     public Icon(byte[] pixels, int width, int height) {
-        this.pixels = pixels; this.width = width; this.height = height;
+        this.pixels = pixels;
+        this.width = width;
+        this.height = height;
     }
-    public void draw(int x, int y, int opacity) { /* 외재 상태(x,y,opacity)로 그리기 */ }
+
+    public void draw(int x, int y, int opacity) {
+        /* 외재 상태(x,y,opacity)로 그리기 */
+    }
 }
 
 // Flyweight Factory: 같은 이름의 아이콘은 공유
-import java.util.*;
 public final class IconFactory {
     private static final Map<String, Icon> CACHE = new HashMap<>();
+
     public static Icon get(String name) {
         Icon icon = CACHE.get(name);
         if (icon == null) {
@@ -64,7 +73,10 @@ public final class IconFactory {
         }
         return icon; // 공유 인스턴스
     }
-    private static byte[] loadPixels(String name) { return new byte[16 * 16 * 4]; }
+
+    private static byte[] loadPixels(String name) {
+        return new byte[16 * 16 * 4];
+    }
 }
 
 // 사용: 위치/투명도 등은 외재 상태로 전달

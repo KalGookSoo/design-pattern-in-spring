@@ -39,6 +39,10 @@ classDiagram
 ### 간단 예시 (Java 최소 코드)
 
 ```java
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 // Subject
 public interface ReportService {
     String generate(String id);
@@ -54,7 +58,6 @@ public final class RealReportService implements ReportService {
 }
 
 // Proxy: 접근 제어 + 캐시 예시
-import java.util.*;
 public final class CachingSecuredReportProxy implements ReportService {
     private final ReportService target; // RealSubject
     private final Set<String> allowed = Set.of("ADMIN", "ANALYST");
@@ -71,7 +74,9 @@ public final class CachingSecuredReportProxy implements ReportService {
             throw new SecurityException("forbidden");
         }
         String cached = cache.get(id);
-        if (cached != null) return cached; // 캐시된 결과 반환
+        if (cached != null) {
+            return cached; // 캐시된 결과 반환
+        }
         String result = target.generate(id);
         cache.put(id, result);
         return result;

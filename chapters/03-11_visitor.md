@@ -42,19 +42,34 @@ classDiagram
 ### 간단 예시 (Java 최소 코드)
 
 ```java
+import java.util.ArrayList;
+import java.util.List;
+
 // 요소(Element) 계약
 public interface Element {
     void accept(Visitor v);
 }
 
 public final class ElementA implements Element {
-    public String operationA() { return "A"; }
-    @Override public void accept(Visitor v) { v.visitA(this); }
+    public String operationA() {
+        return "A";
+    }
+
+    @Override
+    public void accept(Visitor v) {
+        v.visitA(this);
+    }
 }
 
 public final class ElementB implements Element {
-    public String operationB() { return "B"; }
-    @Override public void accept(Visitor v) { v.visitB(this); }
+    public String operationB() {
+        return "B";
+    }
+
+    @Override
+    public void accept(Visitor v) {
+        v.visitB(this);
+    }
 }
 
 // 방문자(Visitor) 계약
@@ -65,25 +80,47 @@ public interface Visitor {
 
 // 구체 방문자 1: 렌더링
 public final class RenderVisitor implements Visitor {
-    @Override public void visitA(ElementA a) { System.out.println("<A>" + a.operationA() + "</A>"); }
-    @Override public void visitB(ElementB b) { System.out.println("<B>" + b.operationB() + "</B>"); }
+    @Override
+    public void visitA(ElementA a) {
+        System.out.println("<A>" + a.operationA() + "</A>");
+    }
+
+    @Override
+    public void visitB(ElementB b) {
+        System.out.println("<B>" + b.operationB() + "</B>");
+    }
 }
 
 // 구체 방문자 2: 수집/집계
 public final class CollectVisitor implements Visitor {
-    private final java.util.List<String> list = new java.util.ArrayList<>();
-    @Override public void visitA(ElementA a) { list.add(a.operationA()); }
-    @Override public void visitB(ElementB b) { list.add(b.operationB()); }
-    public java.util.List<String> result() { return java.util.List.copyOf(list); }
+    private final List<String> list = new ArrayList<>();
+
+    @Override
+    public void visitA(ElementA a) {
+        list.add(a.operationA());
+    }
+
+    @Override
+    public void visitB(ElementB b) {
+        list.add(b.operationB());
+    }
+
+    public List<String> result() {
+        return List.copyOf(list);
+    }
 }
 
 // 사용 예시
-java.util.List<Element> elements = java.util.List.of(new ElementA(), new ElementB());
+List<Element> elements = List.of(new ElementA(), new ElementB());
 Visitor render = new RenderVisitor();
-for (Element e : elements) { e.accept(render); }
+for (Element e : elements) {
+    e.accept(render);
+}
 CollectVisitor collector = new CollectVisitor();
-for (Element e : elements) { e.accept(collector); }
-java.util.List<String> aggregated = collector.result(); // ["A", "B"]
+for (Element e : elements) {
+    e.accept(collector);
+}
+List<String> aggregated = collector.result(); // ["A", "B"]
 ```
 
 - 동일한 요소 구조에 대해 서로 다른 방문자(Render, Collect 등)를 적용함으로써 연산을 외부로 분리합니다.

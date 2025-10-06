@@ -45,29 +45,49 @@ classDiagram
 ### 간단 예시 (Java 최소 코드)
 
 ```java
+import java.util.ArrayList;
+import java.util.List;
+
 // Component
 public interface Node {
     String render();
-    default void add(Node child) { throw new UnsupportedOperationException(); }
+
+    default void add(Node child) {
+        throw new UnsupportedOperationException();
+    }
 }
 
 // Leaf
 public final class TextNode implements Node {
     private final String text;
-    public TextNode(String text) { this.text = text; }
-    public String render() { return text; }
+
+    public TextNode(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public String render() {
+        return text;
+    }
 }
 
 // Composite
-import java.util.*;
 public class GroupNode implements Node {
     private final List<Node> children = new ArrayList<>();
-    @Override public String render() {
+
+    @Override
+    public String render() {
         StringBuilder sb = new StringBuilder();
-        for (Node n : children) sb.append(n.render());
+        for (Node n : children) {
+            sb.append(n.render());
+        }
         return sb.toString();
     }
-    @Override public void add(Node child) { children.add(child); }
+
+    @Override
+    public void add(Node child) {
+        children.add(child);
+    }
 }
 ```
 

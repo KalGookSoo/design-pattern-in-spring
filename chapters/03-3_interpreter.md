@@ -48,8 +48,14 @@ import java.util.Map;
 // 해석 컨텍스트
 public final class Context {
     private final Map<String, Object> values;
-    public Context(Map<String, Object> values) { this.values = values; }
-    public Object get(String name) { return values.get(name); }
+
+    public Context(Map<String, Object> values) {
+        this.values = values;
+    }
+
+    public Object get(String name) {
+        return values.get(name);
+    }
 }
 
 // 표현식 계약
@@ -60,36 +66,64 @@ public interface Expression {
 // 단말 표현식: 상수 숫자
 public final class NumberExpr implements Expression {
     private final int value;
-    public NumberExpr(int value) { this.value = value; }
-    @Override public Object interpret(Context ctx) { return value; }
+
+    public NumberExpr(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public Object interpret(Context ctx) {
+        return Integer.valueOf(value);
+    }
 }
 
 // 단말 표현식: 변수 참조
 public final class VarExpr implements Expression {
     private final String name;
-    public VarExpr(String name) { this.name = name; }
-    @Override public Object interpret(Context ctx) { return ctx.get(name); }
+
+    public VarExpr(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Object interpret(Context ctx) {
+        return ctx.get(name);
+    }
 }
 
 // 비단말 표현식: 덧셈
 public final class AddExpr implements Expression {
-    private final Expression left, right;
-    public AddExpr(Expression left, Expression right) { this.left = left; this.right = right; }
-    @Override public Object interpret(Context ctx) {
+    private final Expression left;
+    private final Expression right;
+
+    public AddExpr(Expression left, Expression right) {
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
+    public Object interpret(Context ctx) {
         int l = ((Number) left.interpret(ctx)).intValue();
         int r = ((Number) right.interpret(ctx)).intValue();
-        return l + r;
+        return Integer.valueOf(l + r);
     }
 }
 
 // 비단말 표현식: 불리언 AND
 public final class AndExpr implements Expression {
-    private final Expression left, right;
-    public AndExpr(Expression left, Expression right) { this.left = left; this.right = right; }
-    @Override public Object interpret(Context ctx) {
+    private final Expression left;
+    private final Expression right;
+
+    public AndExpr(Expression left, Expression right) {
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
+    public Object interpret(Context ctx) {
         boolean l = (Boolean) left.interpret(ctx);
         boolean r = (Boolean) right.interpret(ctx);
-        return l && r;
+        return Boolean.valueOf(l && r);
     }
 }
 

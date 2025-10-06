@@ -59,17 +59,47 @@ public abstract class DataImporter { // 상위 템플릿
 }
 
 public final class CsvDataImporter extends DataImporter {
-    @Override protected void open() { System.out.println("open csv"); }
-    @Override protected void read() { System.out.println("read csv rows"); }
-    @Override protected void process() { System.out.println("process csv"); }
-    @Override protected boolean preValidate() { return true; }
+    @Override
+    protected void open() {
+        System.out.println("open csv");
+    }
+
+    @Override
+    protected void read() {
+        System.out.println("read csv rows");
+    }
+
+    @Override
+    protected void process() {
+        System.out.println("process csv");
+    }
+
+    @Override
+    protected boolean preValidate() {
+        return true;
+    }
 }
 
 public final class JsonDataImporter extends DataImporter {
-    @Override protected void open() { System.out.println("open json"); }
-    @Override protected void read() { System.out.println("read json array"); }
-    @Override protected void process() { System.out.println("process json"); }
-    @Override protected void close() { System.out.println("close json"); }
+    @Override
+    protected void open() {
+        System.out.println("open json");
+    }
+
+    @Override
+    protected void read() {
+        System.out.println("read json array");
+    }
+
+    @Override
+    protected void process() {
+        System.out.println("process json");
+    }
+
+    @Override
+    protected void close() {
+        System.out.println("close json");
+    }
 }
 
 // 사용 예시
@@ -139,6 +169,7 @@ flowchart LR
 
 ```java
 public abstract class AbstractApiHandler<TReq, TRes> {
+
     public final TRes handle(TReq req) {
         pre(req);
         validate(req);
@@ -146,15 +177,27 @@ public abstract class AbstractApiHandler<TReq, TRes> {
         post(req, res);
         return res;
     }
+
     protected void pre(TReq req) { /* 공통 로깅/권한 컨텍스트 */ }
+
     protected void validate(TReq req) { /* 기본 검증(하위 재정의 가능) */ }
+
     protected abstract TRes doHandle(TReq req);
+
     protected void post(TReq req, TRes res) { /* 감사/메트릭 */ }
+
 }
 
 public final class CancelOrderHandler extends AbstractApiHandler<Long, String> {
-    @Override protected void validate(Long id) { /* id 검사 */ }
-    @Override protected String doHandle(Long id) { /* 서비스 호출 */ return "OK"; }
+
+    @Override
+    protected void validate(Long id) { /* id 검사 */ }
+
+    @Override
+    protected String doHandle(Long id) { /* 서비스 호출 */
+        return "OK";
+    }
+
 }
 ```
 

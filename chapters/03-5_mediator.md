@@ -50,28 +50,50 @@ public interface Mediator {
 // Colleague 베이스
 public abstract class Colleague {
     protected final Mediator mediator;
-    protected Colleague(Mediator mediator) { this.mediator = mediator; }
+
+    protected Colleague(Mediator mediator) {
+        this.mediator = mediator;
+    }
 }
 
 public final class Button extends Colleague {
-    public Button(Mediator mediator) { super(mediator); }
-    public void click() { mediator.notify(this, "click"); }
+    public Button(Mediator mediator) {
+        super(mediator);
+    }
+
+    public void click() {
+        mediator.notify(this, "click");
+    }
 }
 
 public final class TextBox extends Colleague {
     private String text = "";
-    public TextBox(Mediator mediator) { super(mediator); }
-    public void setText(String t) { this.text = t; mediator.notify(this, "change"); }
-    public String getText() { return text; }
+
+    public TextBox(Mediator mediator) {
+        super(mediator);
+    }
+
+    public void setText(String t) {
+        this.text = t;
+        mediator.notify(this, "change");
+    }
+
+    public String getText() {
+        return text;
+    }
 }
 
 public final class FormMediator implements Mediator {
     private final Button submit;
     private final TextBox name;
+
     public FormMediator(Button submit, TextBox name) {
-        this.submit = submit; this.name = name;
+        this.submit = submit;
+        this.name = name;
     }
-    @Override public void notify(Colleague sender, String event) {
+
+    @Override
+    public void notify(Colleague sender, String event) {
         // 간단한 규칙: 이름이 비어 있으면 제출 불가 (데모용 로깅)
         if (sender == name && "change".equals(event)) {
             if (name.getText() == null || name.getText().isBlank()) {

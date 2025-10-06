@@ -69,9 +69,13 @@ public interface Handler {
 // 공통 베이스
 public abstract class AbstractHandler implements Handler {
     private Handler next;
-    @Override public Handler setNext(Handler next) {
-        this.next = next; return next;
+
+    @Override
+    public Handler setNext(Handler next) {
+        this.next = next;
+        return next;
     }
+
     protected Response next(Request req) {
         return (next != null) ? next.handle(req) : null; // null이면 미처리 의미
     }
@@ -79,7 +83,8 @@ public abstract class AbstractHandler implements Handler {
 
 // 구체 처리자: 권한 검사
 public final class AuthHandler extends AbstractHandler {
-    @Override public Response handle(Request req) {
+    @Override
+    public Response handle(Request req) {
         if ("ADMIN".equals(req.userRole)) {
             return next(req); // 통과, 다음으로 위임
         }
@@ -89,7 +94,8 @@ public final class AuthHandler extends AbstractHandler {
 
 // 구체 처리자: 입력 검증
 public final class ValidationHandler extends AbstractHandler {
-    @Override public Response handle(Request req) {
+    @Override
+    public Response handle(Request req) {
         if (req.payload == null || req.payload.isBlank()) {
             return new Response(400, "bad request");
         }
@@ -99,7 +105,8 @@ public final class ValidationHandler extends AbstractHandler {
 
 // 구체 처리자: 실제 처리
 public final class BusinessHandler extends AbstractHandler {
-    @Override public Response handle(Request req) {
+    @Override
+    public Response handle(Request req) {
         // 실제 비즈니스 로직 처리
         return new Response(200, "ok:" + req.payload);
     }

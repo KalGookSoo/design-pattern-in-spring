@@ -45,28 +45,40 @@ public interface State {
 // 컨텍스트
 public final class Context {
     private State state;
-    public Context(State init) { this.state = init; }
-    public void setState(State s) { this.state = s; }
-    public void request() { state.handle(this); }
+
+    public Context(State init) {
+        this.state = init;
+    }
+
+    public void setState(State s) {
+        this.state = s;
+    }
+
+    public void request() {
+        state.handle(this);
+    }
 }
 
 // 구체 상태들
 public final class Draft implements State {
-    @Override public void handle(Context ctx) {
+    @Override
+    public void handle(Context ctx) {
         System.out.println("Draft -> submit");
         ctx.setState(new Submitted());
     }
 }
 
 public final class Submitted implements State {
-    @Override public void handle(Context ctx) {
+    @Override
+    public void handle(Context ctx) {
         System.out.println("Submitted -> approve");
         ctx.setState(new Approved());
     }
 }
 
 public final class Approved implements State {
-    @Override public void handle(Context ctx) {
+    @Override
+    public void handle(Context ctx) {
         System.out.println("Approved: done");
         // terminal 상태: 전이 없음
     }

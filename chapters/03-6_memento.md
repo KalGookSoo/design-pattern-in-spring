@@ -39,33 +39,56 @@ classDiagram
 ### 간단 예시 (Java 최소 코드)
 
 ```java
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 // 상태를 가진 Originator
 public final class TextEditor { // Originator
     private StringBuilder content = new StringBuilder();
 
-    public void type(String s) { content.append(s); }
-    public String getText() { return content.toString(); }
+    public void type(String s) {
+        content.append(s);
+    }
+
+    public String getText() {
+        return content.toString();
+    }
 
     // 메멘토 생성
-    public Memento save() { return new Memento(content.toString()); }
+    public Memento save() {
+        return new Memento(content.toString());
+    }
+
     // 메멘토로 복구
-    public void restore(Memento m) { this.content = new StringBuilder(m.state()); }
+    public void restore(Memento m) {
+        this.content = new StringBuilder(m.state());
+    }
 
     // 불변 메멘토(캡슐화)
     public static final class Memento { // Memento
         private final String state;
-        private Memento(String state) { this.state = state; }
-        private String state() { return state; }
+
+        private Memento(String state) {
+            this.state = state;
+        }
+
+        private String state() {
+            return state;
+        }
     }
 }
 
 // Caretaker: 히스토리 보관
-import java.util.ArrayDeque;
-import java.util.Deque;
 public final class History { // Caretaker
     private final Deque<TextEditor.Memento> stack = new ArrayDeque<>();
-    public void backup(TextEditor.Memento m) { stack.push(m); }
-    public TextEditor.Memento undo() { return stack.isEmpty() ? null : stack.pop(); }
+
+    public void backup(TextEditor.Memento m) {
+        stack.push(m);
+    }
+
+    public TextEditor.Memento undo() {
+        return stack.isEmpty() ? null : stack.pop();
+    }
 }
 
 // 사용 예시

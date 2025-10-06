@@ -41,22 +41,43 @@ public interface DiscountPolicy {
 // 구체 전략 1: 비율 할인
 public final class RateDiscountPolicy implements DiscountPolicy {
     private final int rate; // percent
-    public RateDiscountPolicy(int rate) { this.rate = rate; }
-    @Override public int discount(int price) { return price * rate / 100; }
+
+    public RateDiscountPolicy(int rate) {
+        this.rate = rate;
+    }
+
+    @Override
+    public int discount(int price) {
+        return price * rate / 100;
+    }
 }
 
 // 구체 전략 2: 고정액 할인
 public final class FixedDiscountPolicy implements DiscountPolicy {
     private final int amount;
-    public FixedDiscountPolicy(int amount) { this.amount = amount; }
-    @Override public int discount(int price) { return Math.min(amount, price); }
+
+    public FixedDiscountPolicy(int amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public int discount(int price) {
+        return Math.min(amount, price);
+    }
 }
 
 // 컨텍스트
 public final class CheckoutService {
     private DiscountPolicy policy; // 주입 또는 런타임 선택
-    public CheckoutService(DiscountPolicy policy) { this.policy = policy; }
-    public void setPolicy(DiscountPolicy p) { this.policy = p; }
+
+    public CheckoutService(DiscountPolicy policy) {
+        this.policy = policy;
+    }
+
+    public void setPolicy(DiscountPolicy p) {
+        this.policy = p;
+    }
+
     public int pay(int price) {
         int dc = policy.discount(price);
         return price - dc;

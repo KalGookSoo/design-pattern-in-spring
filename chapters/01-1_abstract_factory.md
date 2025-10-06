@@ -92,31 +92,62 @@ classDiagram
 ### 스프링 프로필로 제품군 전환하기 (간략 코드)
 
 ```java
-public interface PaymentClient { String pay(int amount); }
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-public class KakaoPayClient implements PaymentClient { public String pay(int amount){ return "KAKAO:"+amount; } }
-public class TossPayClient implements PaymentClient { public String pay(int amount){ return "TOSS:"+amount; } }
+public interface PaymentClient {
+    String pay(int amount);
+}
 
-public interface PaymentFactory { PaymentClient createClient(); }
+public final class KakaoPayClient implements PaymentClient {
+    @Override
+    public String pay(int amount) {
+        return "KAKAO:" + amount;
+    }
+}
+
+public final class TossPayClient implements PaymentClient {
+    @Override
+    public String pay(int amount) {
+        return "TOSS:" + amount;
+    }
+}
+
+public interface PaymentFactory {
+    PaymentClient createClient();
+}
 
 @Profile("kakao")
 @Component
-class KakaoPaymentFactory implements PaymentFactory {
-    public PaymentClient createClient() { return new KakaoPayClient(); }
+final class KakaoPaymentFactory implements PaymentFactory {
+    @Override
+    public PaymentClient createClient() {
+        return new KakaoPayClient();
+    }
 }
 
 @Profile("toss")
 @Component
-class TossPaymentFactory implements PaymentFactory {
-    public PaymentClient createClient() { return new TossPayClient(); }
+final class TossPaymentFactory implements PaymentFactory {
+    @Override
+    public PaymentClient createClient() {
+        return new TossPayClient();
+    }
 }
 
 // 클라이언트 서비스는 팩토리 추상화에만 의존
 @Service
-class PayService {
+public class PayService {
     private final PaymentFactory factory;
-    PayService(PaymentFactory factory) { this.factory = factory; }
-    public String doPay(int amount) { return factory.createClient().pay(amount); }
+
+    public PayService(PaymentFactory factory) {
+        this.factory = factory;
+    }
+
+    public String doPay(int amount) {
+        return factory.createClient().pay(amount);
+    }
 }
 ```
 
